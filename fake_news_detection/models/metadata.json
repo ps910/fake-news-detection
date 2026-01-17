@@ -1,0 +1,24 @@
+{
+  "model_type": "logistic_regression",
+  "label_mapping": {
+    "0": 0,
+    "1": 1
+  },
+  "class_names": [
+    "Real",
+    "Fake"
+  ],
+  "training_history": {
+    "model_type": "logistic_regression",
+    "validation_metrics": {
+      "accuracy": 0.9479852971773355,
+      "precision": 0.9481130498547526,
+      "recall": 0.9479852971773355,
+      "f1_score": 0.9479671349248686,
+      "confusion_matrix": "[[6564  442]\n [ 308 7105]]",
+      "roc_auc": 0.9886693639365368,
+      "classification_report": "              precision    recall  f1-score   support\n\n        Real       0.96      0.94      0.95      7006\n        Fake       0.94      0.96      0.95      7413\n\n    accuracy                           0.95     14419\n   macro avg       0.95      0.95      0.95     14419\nweighted avg       0.95      0.95      0.95     14419\n"
+    }
+  },
+  "saved_at": "2026-01-16T23:39:25.763921"
+}

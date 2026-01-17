@@ -1,0 +1,72 @@
+version: '3.8'
+
+services:
+  # MongoDB Database
+  mongodb:
+    image: mongo:6
+    container_name: fakenews-mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    environment:
+      - MONGO_INITDB_DATABASE=fakenews
+    networks:
+      - fakenews-network
+
+  # Python ML API
+  ml-api:
+    build:
+      context: ..
+      dockerfile: webapp/Dockerfile.ml
+    container_name: fakenews-ml-api
+    ports:
+      - "5000:5000"
+    volumes:
+      - ../models:/app/models
+      - ../data:/app/data
+    environment:
+      - FLASK_ENV=production
+    networks:
+      - fakenews-network
+
+  # Node.js Backend
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: fakenews-backend
+    ports:
+      - "3001:3001"
+    depends_on:
+      - mongodb
+      - ml-api
+    environment:
+      - PORT=3001
+      - MONGODB_URI=mongodb://mongodb:27017/fakenews
+      - JWT_SECRET=your-production-secret-change-this
+      - JWT_EXPIRE=7d
+      - ML_API_URL=http://ml-api:5000
+      - NODE_ENV=production
+    networks:
+      - fakenews-network
+
+  # React Frontend
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: fakenews-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    networks:
+      - fakenews-network
+
+volumes:
+  mongodb_data:
+
+networks:
+  fakenews-network:
+    driver: bridge
